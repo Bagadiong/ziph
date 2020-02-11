@@ -23,6 +23,7 @@ service: ziph
 provider:
   name: aws
   runtime: python2.7
+  region: ap-southeast-1
 
 # you can overwrite defaults here
 #  stage: dev
@@ -60,6 +61,23 @@ provider:
 functions:
   hello:
     handler: handler.hello
+    layers: 
+      - arn:aws:lambda:ap-southeast-1:885930843522:layer:python-singapore-request:1
+    events:
+      - http:
+          path: zip/all
+          method: get
+      - http:
+          path: zipnumber/{zip-number}
+          method: get
+      - http:
+          path: province/{province-name}
+          method: get
+      - http:
+          path: city/{city-name}
+          method: get
+
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

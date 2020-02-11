@@ -1,24 +1,30 @@
 import json
+import requests
+import zipApi
 
+def response(text):
+    respHeaders ={
+        'Acces-Control-Allow-Origin':'*'
+    }
+    return {
+        'statusCode':200,
+        'headers': respHeaders,
+        'body': json.dumps(text)
+    }
 
 def hello(event, context):
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
+    print(event)
+    path=event['requestContext']['resourcePath']
+    pathParams=event['pathParameters']
+    if(path=='/zip/all'):
+        body=zipApi.getZipAll()
+    elif(path=='/zipnumber/{zip-number}'):
+        body=zipApi.getZip(pathParams['zip-number'])
+    elif(path=='/province/{province-name}'):
+        body=zipApi.getProvince(pathParams['province-name'])
+    elif(path=='/city/{city-name}'):
+        body=zipApi.getCity(pathParams['city-name'])
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
+    
 
-    return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
+    return response(body)
